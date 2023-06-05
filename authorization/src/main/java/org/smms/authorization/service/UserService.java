@@ -38,4 +38,10 @@ public interface UserService {
      */
     List<UserDto> findAllByIds(List<Long> ids);
 
+
+    /**
+     * @param id идентификатор {@link UserEntity}
+     * @return {@link UserDto} удаленного пользователя
+     */
+     UserDto deleteById(Long id);
 }

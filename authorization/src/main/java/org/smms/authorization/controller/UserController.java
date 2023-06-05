@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.smms.authorization.dto.UserDto;
 import org.smms.authorization.entity.UserEntity;
-import org.smms.authorization.mapper.UserMapper;
 import org.smms.authorization.service.AuthService;
 import org.smms.authorization.service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
@@ -34,13 +33,11 @@ import org.slf4j.LoggerFactory;
 public class UserController {
 
     private final UserServiceImpl userService;
-    private final UserMapper userMapper;
     private final AuthService authService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
    
-    public UserController(UserServiceImpl userService, UserMapper userMapper, AuthService authService) {
+    public UserController(UserServiceImpl userService, AuthService authService) {
         this.userService = userService;
-        this.userMapper = userMapper;
         this.authService = authService;
     }
 
@@ -97,5 +94,16 @@ public class UserController {
     @Operation(summary = "Получение списка пользователей по списку ID", description = "Метод получения списка пользователей")
     public ResponseEntity<List<UserDto>> readAll(@RequestParam("ids") List<Long> ids) {
         return new ResponseEntity<>(userService.findAllByIds(ids), HttpStatus.OK);
+    }
+
+    /**
+     * @param id идентификатор {@link UserEntity}
+     * @return {@link ResponseEntity} содержит {@link UserDto} и статус {@link HttpStatus}.OK
+     */
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("authentication.principal.id == #id or hasAuthority('ADMIN')")
+    @Operation(summary = "Удаление пользователя по id", description = "Метод удаления пользователя по id")
+    public ResponseEntity<UserDto> deleteById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userService.deleteById(id), HttpStatus.OK);
     }
 }

@@ -41,6 +41,4 @@ public interface UserMapper {
       */
      @Mapping(target ="id", ignore = true)
      UserEntity mergeToEntity(UserDto userDto, @MappingTarget UserEntity user);
-
-
 }

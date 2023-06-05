@@ -90,6 +90,14 @@ public class UserServiceImpl implements UserService, UserDetailsService{
         return mapper.toDtoList(users);
     }
 
+    @Override
+    public UserDto deleteById(Long id){
+        final UserEntity user4del = repository.findById(id)
+            .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, id)));
+        repository.delete(user4del);
+        return mapper.toDto(user4del);
+    }
+
     private EntityNotFoundException getEntityNotFoundException(Long id) {
         return new EntityNotFoundException(String.format(USER_NOT_FOUND_MSG, id));
     }
