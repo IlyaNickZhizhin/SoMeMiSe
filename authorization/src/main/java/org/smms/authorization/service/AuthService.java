@@ -26,7 +26,7 @@ public class AuthService {
      */
     public String login(UserDto user) {
           
-        final String login = user.getUsername();
+        final String login = user.getLogin();
         logger.info("Запрос пользователя: {} в сервисе", login);
         final Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(login, user.getPassword())

@@ -22,8 +22,4 @@ public class UserDto {
     String password;
     String role;
     Long profileId;
-    
-    public String getUsername() {
-        return login;
-    }
 }

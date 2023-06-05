@@ -54,13 +54,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     public UserDto save(@Valid UserDto user) {
 
         final UserEntity userEntity = mapper.toEntity(user);
-        logger.info("Пользователь {} успешно зарегистрирован", user.getUsername());
+        logger.info("Пользователь {} успешно зарегистрирован", user.getLogin());
         userEntity.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        logger.info("Пароль пользователя {} успешно зашифрован", user.getUsername());
+        logger.info("Пароль пользователя {} успешно зашифрован", user.getLogin());
         final UserEntity savedUser = repository.save(userEntity);
 
         final UserDto savedUserDto = mapper.toDto(savedUser);
-        logger.info("Пользователь {} успешно сохранен в базе данных", savedUserDto.getUsername());
+        logger.info("Пользователь {} успешно сохранен в базе данных", savedUserDto.getLogin());
         return savedUserDto;
     }
 

@@ -48,9 +48,9 @@ public class UserController {
     @PostMapping("/login")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<String> loginToken(@RequestBody UserDto user) {
-        logger.info("Получен запрос на логирование пользователя: {}", user.getUsername());
+        logger.info("Получен запрос на логирование пользователя: {}", user.getLogin());
         final String token = authService.login(user);
-        logger.info("Пользователь {} успешно авторизован и получен токен {}", user.getUsername(), token);
+        logger.info("Пользователь {} успешно авторизован и получен токен {}", user.getLogin(), token);
         
 
         return new ResponseEntity<>(token, HttpStatus.CREATED);
@@ -82,6 +82,7 @@ public class UserController {
     @Operation(summary = "Обновление пользователя по id", description = "Метод обновления данных пользователя по id")
     public ResponseEntity<UserDto> update(@PathVariable("id") Long id,
                                             @RequestBody UserDto user) {
+        logger.info("Сформированы данные для обновления пользователя №{} {}", user.getId(), user.getLogin());
         return new ResponseEntity<>(userService.update(id, user), HttpStatus.OK);
     }
 
