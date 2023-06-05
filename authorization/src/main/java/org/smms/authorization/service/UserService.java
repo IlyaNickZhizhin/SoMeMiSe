@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * Ceрвис для {@link UserDto} и {@link UserEntity}
  */
 
- @Service
+@Service
 public interface UserService {
 
     /**
@@ -43,5 +43,5 @@ public interface UserService {
      * @param id идентификатор {@link UserEntity}
      * @return {@link UserDto} удаленного пользователя
      */
-     UserDto deleteById(Long id);
+    UserDto deleteById(Long id);
 }

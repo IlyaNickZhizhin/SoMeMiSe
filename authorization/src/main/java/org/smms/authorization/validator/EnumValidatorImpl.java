@@ -18,7 +18,7 @@ public class EnumValidatorImpl implements ConstraintValidator<EnumValidator, Str
     public void initialize(EnumValidator constraintAnnotation) {
         values = new ArrayList<>();
 
-        Enum[] enumValues = constraintAnnotation.enumClass().getEnumConstants();
+        final Enum[] enumValues = constraintAnnotation.enumClass().getEnumConstants();
 
         values = Arrays.stream(enumValues)
             .map(Enum::name)

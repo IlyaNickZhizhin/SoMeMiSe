@@ -31,7 +31,7 @@ public class WebSecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder passwordEncoder, 
-    UserDetailsService userDetailsService) throws Exception {
+            UserDetailsService userDetailsService) throws Exception {
         
         return http.getSharedObject(AuthenticationManagerBuilder.class)
             .userDetailsService(userDetailsService)
@@ -43,16 +43,16 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.httpBasic((htp) -> htp.disable())
-            .csrf(cr ->
+                .csrf(cr ->
                     cr.disable())
-            .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests((request) -> request
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests((request) -> request
                     .requestMatchers("/login").permitAll()
                     .requestMatchers("/registration").permitAll()
                     .anyRequest().authenticated()
             )
-            .addFilterBefore(
-                new JwtTokenFilter(jwtTokenProvider, resolver), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(
+                    new JwtTokenFilter(jwtTokenProvider, resolver), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
     

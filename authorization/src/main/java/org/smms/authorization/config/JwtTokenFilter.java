@@ -19,7 +19,7 @@ import lombok.experimental.FieldDefaults;
 
 @RequiredArgsConstructor
 @FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
-public class JwtTokenFilter extends OncePerRequestFilter{
+public class JwtTokenFilter extends OncePerRequestFilter {
     
     JwtTokenProvider jwtTokenProvider;
     HandlerExceptionResolver resolver;
@@ -27,9 +27,9 @@ public class JwtTokenFilter extends OncePerRequestFilter{
 
     @Override
     protected void doFilterInternal(
-        @NotNull HttpServletRequest request, 
-        @NotNull HttpServletResponse response, 
-        @NotNull FilterChain filterChain) throws ServletException, IOException {
+            @NotNull HttpServletRequest request, 
+            @NotNull HttpServletResponse response, 
+            @NotNull FilterChain filterChain) throws ServletException, IOException {
 
         final String token = jwtTokenProvider.resolveToken(request);
 
@@ -38,7 +38,8 @@ public class JwtTokenFilter extends OncePerRequestFilter{
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 final Authentication auth = jwtTokenProvider.getAuthentification(token);
                 if (auth != null) {
-                    logger.info("Установка контекста аутентификации для пользователя {}, с ролью {}", auth.getName(), auth.getAuthorities());
+                    logger.info("Установка контекста аутентификации для пользователя {}, с ролью {}",
+                            auth.getName(), auth.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 }
             }

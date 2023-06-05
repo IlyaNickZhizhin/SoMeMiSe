@@ -28,7 +28,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 @Table(name = "users", schema = "auth")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserEntity implements UserDetails{
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

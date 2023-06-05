@@ -49,7 +49,7 @@ public class UserController {
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<String> loginToken(@RequestBody UserDto user) {
         logger.info("Получен запрос на логирование пользователя: {}", user.getUsername());
-        String token = authService.login(user);
+        final String token = authService.login(user);
         logger.info("Пользователь {} успешно авторизован и получен токен {}", user.getUsername(), token);
         
 
@@ -91,7 +91,8 @@ public class UserController {
      */
     @GetMapping("/read/all")
     @PreAuthorize("hasAuthority('ADMIN')")
-    @Operation(summary = "Получение списка пользователей по списку ID", description = "Метод получения списка пользователей")
+    @Operation(summary = "Получение списка пользователей по списку ID",
+            description = "Метод получения списка пользователей")
     public ResponseEntity<List<UserDto>> readAll(@RequestParam("ids") List<Long> ids) {
         return new ResponseEntity<>(userService.findAllByIds(ids), HttpStatus.OK);
     }
