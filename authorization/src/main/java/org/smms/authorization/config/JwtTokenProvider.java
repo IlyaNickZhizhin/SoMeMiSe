@@ -65,7 +65,6 @@ public class JwtTokenProvider {
 
         final Date now = new Date();
         final Date validity = new Date(now.getTime() + validityInMilliseconds);
-        logger.info("Содается токен для пользователя: {}", login);
         return Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(now)
@@ -112,7 +111,6 @@ public class JwtTokenProvider {
      * @return true, если токен проходит валидацию, иначе false {@link Boolean}
      * @throws ExpiredJwtException
      */
-
     public boolean validateToken(String token) throws ExpiredJwtException {
         final Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
         return !claims.getBody().getExpiration().before(new Date());

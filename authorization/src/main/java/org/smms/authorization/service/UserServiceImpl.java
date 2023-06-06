@@ -71,6 +71,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         final UserEntity userEntity = repository.findById(id)
                 .orElseThrow(() -> getEntityNotFoundException(id));
 
+        if (user.getPassword() != null) {
+            user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        }
+        
         final UserEntity updatedUser = repository.save(mapper.mergeToEntity(user, userEntity));
         final UserDto mergeDto = mapper.toDto(updatedUser);
         

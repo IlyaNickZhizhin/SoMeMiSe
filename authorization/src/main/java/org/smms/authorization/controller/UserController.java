@@ -12,6 +12,7 @@ import org.smms.authorization.service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import org.slf4j.Logger;
@@ -46,13 +48,10 @@ public class UserController {
      * @return {@link ResponseEntity} содержит token {@link String} и статус {@link HttpStatus}.CREATED 
      */
     @PostMapping("/login")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Авторизация пользователя")
     public ResponseEntity<String> loginToken(@RequestBody UserDto user) {
-        logger.info("Получен запрос на логирование пользователя: {}", user.getLogin());
         final String token = authService.login(user);
-        logger.info("Пользователь {} успешно авторизован и получен токен {}", user.getLogin(), token);
-        
-
         return new ResponseEntity<>(token, HttpStatus.CREATED);
     }
 
@@ -61,6 +60,7 @@ public class UserController {
      * @return {@link ResponseEntity} содержит {@link UserDto} и статус {@link HttpStatus}.CREATED
      */
     @PostMapping("/registration")
+    @SecurityRequirement(name = "bearerAuth")
     @Operation(summary = "Регистрация пользователя")
     public ResponseEntity<UserDto> registration(@RequestBody UserDto user) {
         return new ResponseEntity<>(userService.save(user), HttpStatus.CREATED);
@@ -71,6 +71,7 @@ public class UserController {
      * @return {@link ResponseEntity} содержит {@link UserDto} и статус {@link HttpStatus}.OK
      */
     @GetMapping("/read/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("authentication.principal.id == #id or hasAuthority('ADMIN')")
     @Operation(summary = "Получение пользователя по id", description = "Метод получения пользователя по id")
     public ResponseEntity<UserDto> read(@PathVariable("id") Long id) {
@@ -78,6 +79,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/update")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("authentication.principal.id == #id")
     @Operation(summary = "Обновление пользователя по id", description = "Метод обновления данных пользователя по id")
     public ResponseEntity<UserDto> update(@PathVariable("id") Long id,
@@ -91,6 +93,7 @@ public class UserController {
      * @return {@link ResponseEntity} содержит List<{@link UserDto}> и статус {@link HttpStatus}.OK
      */
     @GetMapping("/read/all")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("hasAuthority('ADMIN')")
     @Operation(summary = "Получение списка пользователей по списку ID",
             description = "Метод получения списка пользователей")
@@ -102,7 +105,8 @@ public class UserController {
      * @param id идентификатор {@link UserEntity}
      * @return {@link ResponseEntity} содержит {@link UserDto} и статус {@link HttpStatus}.OK
      */
-    @GetMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id}")
+    @SecurityRequirement(name = "bearerAuth")
     @PreAuthorize("authentication.principal.id == #id or hasAuthority('ADMIN')")
     @Operation(summary = "Удаление пользователя по id", description = "Метод удаления пользователя по id")
     public ResponseEntity<UserDto> deleteById(@PathVariable("id") Long id) {
