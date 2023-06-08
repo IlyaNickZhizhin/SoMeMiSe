@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.smms.authorization.dto.UserDto;
 import org.smms.authorization.entity.UserEntity;
-// import org.smms.authorization.mapper.AbstractUserMapper;
+import org.smms.authorization.mapper.AbstractUserMapper;
 import org.smms.authorization.mapper.UserMapper;
 import org.smms.authorization.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,15 +25,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final static String USER_NOT_FOUND_MSG = "Пользователь с логином %s не найден";
 
     private final UserMapper mapper;
-    // private final AbstractUserMapper abstractMapper;
+    private final AbstractUserMapper abstractMapper;
     private final UserRepository repository;
 
-    public UserServiceImpl(UserMapper mapper, UserRepository repository 
-            //, AbstractUserMapper abstractMapper
+    public UserServiceImpl(UserMapper mapper, UserRepository repository, AbstractUserMapper abstractMapper
     ) {
         this.mapper = mapper;
         this.repository = repository;
-        // this.abstractMapper = abstractMapper;
+        this.abstractMapper = abstractMapper;
     }
 
     @Override
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 .orElseThrow(() -> getEntityNotFoundException(id));
         
         final UserDto userDto = mapper.toDto(user);
-        // userDto.setProfile(abstractMapper.toProfileDto(user.getProfileId()));
+        userDto.setProfile(abstractMapper.toProfileDto(user.getProfileId()));
         return userDto;
     }
 
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         final UserDto savedUserDto = mapper.toDto(savedUser);
 
-        // savedUserDto.setProfile(abstractMapper.toProfileDto(savedUser.getProfileId()));
+        savedUserDto.setProfile(abstractMapper.toProfileDto(savedUser.getProfileId()));
 
         return savedUserDto;
     }
@@ -88,7 +87,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         
         final UserEntity updatedUser = repository.save(mapper.mergeToEntity(user, userEntity));
         final UserDto mergeDto = mapper.toDto(updatedUser);
-        // mergeDto.setProfile(abstractMapper.toProfileDto(updatedUser.getProfileId()));
+        mergeDto.setProfile(abstractMapper.toProfileDto(updatedUser.getProfileId()));
         
         return mergeDto;
     }

@@ -24,12 +24,12 @@ public class AuthService {
     public String login(UserDto user) {       
         final String login = user.getLogin();
         final Long userId = userService.findByLogin(login);
-        final Long profileId = userService.findById(userId).getProfileId();
+        final Long profileId = userService.findById(userId).getProfile().getId();
         final Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(login, user.getPassword())
         );
         
-        return jwtTokenProvider.createToken(login.toString(), authentication.getAuthorities().toString(), profileId);
+        return jwtTokenProvider.createToken(login, authentication.getAuthorities().toString(), profileId);
     } 
 
 }

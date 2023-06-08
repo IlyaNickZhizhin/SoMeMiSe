@@ -21,6 +21,6 @@ public class UserDto {
     String login;
     String password;
     String role;
-    Long profileId;
-    // ProfileDto profile;
+    //Long profileId;
+    ProfileDto profile;
 }

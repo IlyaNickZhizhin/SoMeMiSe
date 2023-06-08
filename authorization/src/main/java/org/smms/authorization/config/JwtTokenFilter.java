@@ -2,6 +2,7 @@ package org.smms.authorization.config;
 
 import java.io.IOException;
 
+import lombok.AccessLevel;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -17,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @RequiredArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE, makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class JwtTokenFilter extends OncePerRequestFilter {
     
     JwtTokenProvider jwtTokenProvider;
