@@ -1,20 +1,27 @@
-package org.smms.authorization.dto;
+// package org.smms.authorization.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.experimental.FieldDefaults;
+// import java.util.HashSet;
+// import java.util.Set;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@FieldDefaults(level = lombok.AccessLevel.PRIVATE)
-public class ProfileDto {
+// import lombok.AllArgsConstructor;
+// import lombok.Data;
+// import lombok.NoArgsConstructor;
+
+// @Data
+// @NoArgsConstructor
+// @AllArgsConstructor
+// public class ProfileDto {
     
-    Long id;
-    String name;
-    String bio;
+//     private Long id;
+//     private String name;
+//     private String bio;
+//     private String avatarUrl;
+//     private Set<ProfileSummaryDto> following;
+//     private Set<ProfileSummaryDto> followers;
 
-}
+//     public Set<ProfileSummaryDto> getFriends() {
+//         final Set<ProfileSummaryDto> friends = new HashSet<>(following);
+//         friends.retainAll(followers);
+//         return friends;
+//     }
+// }

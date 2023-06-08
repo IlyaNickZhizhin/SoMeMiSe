@@ -5,6 +5,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+// import org.smms.authorization.dto.ProfileDto;
 import org.smms.authorization.dto.UserDto;
 import org.smms.authorization.entity.UserEntity;
 
@@ -18,6 +19,7 @@ public interface UserMapper {
      * @param user {@link UserEntity}
      * @return {@link UserDto}
      */
+    // @Mapping(target = "profile", source = "profileId")
     UserDto toDto(UserEntity user);
 
      /**
@@ -25,6 +27,7 @@ public interface UserMapper {
       * @return {@link UserEntity}
       */
     @Mapping(target = "id", ignore = true)
+    // @Mapping(target = "profileId", source = "profile.id")
     UserEntity toEntity(UserDto userDto);
 
     /**
@@ -39,5 +42,9 @@ public interface UserMapper {
       * @return {@link UserEntity}
       */
     @Mapping(target = "id", ignore = true)
+    // @Mapping(target = "profileId", source = "profile.id")
     UserEntity mergeToEntity(UserDto userDto, @MappingTarget UserEntity user);
+
+    // @Mapping(target = "id", source = "id")
+    // ProfileDto toProfileDto(Long id);
 }

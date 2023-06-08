@@ -44,4 +44,6 @@ public interface UserService {
      * @return {@link UserDto} удаленного пользователя
      */
     UserDto deleteById(Long id);
+
+    Long findByLogin(String login);
 }

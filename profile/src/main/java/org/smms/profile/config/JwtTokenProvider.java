@@ -1,26 +1,20 @@
-package org.smms.authorization.config;
+package org.smms.profile.config;
 
-import java.util.Base64;
 import java.util.Date;
 
-import org.smms.authorization.dto.UserDto;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -38,38 +32,6 @@ public class JwtTokenProvider {
     private long validityInMilliseconds;
 
     private final UserDetailsService userDetailsService;
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @PostConstruct
-    protected void init() {
-        secret = Base64.getEncoder().encodeToString(secret.getBytes());
-    }
-
-    /**
-     * Создает токен для пользователя
-     * @param login имя пользователя {@link UserDto}
-     * @param role роль пользователя {@link UserDto}
-     * @param profileId идентификатор профиля пользователя {@link UserDto}
-     * @return токен {@link String}
-     */
-    public String createToken(String login, String role, Long profileId) {
-
-        final Claims claims = Jwts.claims().setSubject(login);
-        claims.put("role", role);
-        claims.put("profileId", profileId);
-        final Date now = new Date();
-        final Date validity = new Date(now.getTime() + validityInMilliseconds);
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(now)
-            .setExpiration(validity)
-            .signWith(SignatureAlgorithm.HS256, secret)
-            .compact();
-    }
 
     /**
      * Возвращает аутентификацию пользователя по токену
@@ -112,6 +74,10 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) throws ExpiredJwtException {
         final Jws<Claims> claims = Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
         return !claims.getBody().getExpiration().before(new Date());
+    }
+
+    public Long getProfileId(String token) {
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().get("profileId", Long.class);
     }
 
 }

@@ -2,10 +2,9 @@ package org.smms.authorization.service;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.smms.authorization.dto.UserDto;
 import org.smms.authorization.entity.UserEntity;
+// import org.smms.authorization.mapper.AbstractUserMapper;
 import org.smms.authorization.mapper.UserMapper;
 import org.smms.authorization.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,21 +16,25 @@ import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final static String USER_NOT_FOUND_MSG = "Пользователь с логином %s не найден";
 
     private final UserMapper mapper;
+    // private final AbstractUserMapper abstractMapper;
     private final UserRepository repository;
-    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    public UserServiceImpl(UserMapper mapper, UserRepository repository) {
+    public UserServiceImpl(UserMapper mapper, UserRepository repository 
+            //, AbstractUserMapper abstractMapper
+    ) {
         this.mapper = mapper;
         this.repository = repository;
+        // this.abstractMapper = abstractMapper;
     }
-
 
     @Override
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
@@ -40,27 +43,35 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public Long findByLogin(String login) {
+        return repository.findByLogin(login)
+            .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, login)))
+            .getId();
+    }
+
+    @Override
     public UserDto findById(Long id) {
         final UserEntity user = repository.findById(id)
                 .orElseThrow(() -> getEntityNotFoundException(id));
-
+        
         final UserDto userDto = mapper.toDto(user);
-
+        // userDto.setProfile(abstractMapper.toProfileDto(user.getProfileId()));
         return userDto;
     }
 
     @Override
     @Transactional
     public UserDto save(@Valid UserDto user) {
-
+ 
         final UserEntity userEntity = mapper.toEntity(user);
-        logger.info("Пользователь {} успешно зарегистрирован", user.getLogin());
+
         userEntity.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        logger.info("Пароль пользователя {} успешно зашифрован", user.getLogin());
         final UserEntity savedUser = repository.save(userEntity);
 
         final UserDto savedUserDto = mapper.toDto(savedUser);
-        logger.info("Пользователь {} успешно сохранен в базе данных", savedUserDto.getLogin());
+
+        // savedUserDto.setProfile(abstractMapper.toProfileDto(savedUser.getProfileId()));
+
         return savedUserDto;
     }
 
@@ -77,6 +88,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         
         final UserEntity updatedUser = repository.save(mapper.mergeToEntity(user, userEntity));
         final UserDto mergeDto = mapper.toDto(updatedUser);
+        // mergeDto.setProfile(abstractMapper.toProfileDto(updatedUser.getProfileId()));
         
         return mergeDto;
     }
@@ -95,6 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDto deleteById(Long id) {
         final UserEntity user4del = repository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException(String.format(USER_NOT_FOUND_MSG, id)));

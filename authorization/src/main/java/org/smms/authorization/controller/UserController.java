@@ -26,17 +26,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 @RestController
 @Tag(name = "User", description = "Контроллер для работы с пользователями")
 public class UserController {
 
     private final UserServiceImpl userService;
     private final AuthService authService;
-    private final Logger logger = LoggerFactory.getLogger(UserController.class);
    
     public UserController(UserServiceImpl userService, AuthService authService) {
         this.userService = userService;
@@ -84,7 +79,6 @@ public class UserController {
     @Operation(summary = "Обновление пользователя по id", description = "Метод обновления данных пользователя по id")
     public ResponseEntity<UserDto> update(@PathVariable("id") Long id,
                                             @RequestBody UserDto user) {
-        logger.info("Сформированы данные для обновления пользователя №{} {}", user.getId(), user.getLogin());
         return new ResponseEntity<>(userService.update(id, user), HttpStatus.OK);
     }
 

@@ -9,30 +9,27 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
-    private final Logger logger = LoggerFactory.getLogger(AuthService.class);
+    private final UserServiceImpl userService;
 
     /**
      * @param user содежит введенные пользователем данные {@link UserDto}
      * @return token, сгенерированный для пользователя
      */
-    public String login(UserDto user) {
-          
+    public String login(UserDto user) {       
         final String login = user.getLogin();
-        logger.info("Запрос пользователя: {} в сервисе", login);
+        final Long userId = userService.findByLogin(login);
+        final Long profileId = userService.findById(userId).getProfileId();
         final Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(login, user.getPassword())
         );
         
-        return jwtTokenProvider.createToken(login.toString(), authentication.getAuthorities().toString());
+        return jwtTokenProvider.createToken(login.toString(), authentication.getAuthorities().toString(), profileId);
     } 
 
 }
